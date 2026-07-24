@@ -14,7 +14,7 @@ type AdminHandler struct {
 func (h *AdminHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.DB.Query(r.Context(), `
 		SELECT u.id, u.email, COALESCE(u.phone,''), u.role, u.created_at::text,
-		       COALESCE(c.id::text,''), COALESCE(c.name,''), c.is_verified
+		       COALESCE(c.id::text,''), COALESCE(c.name,''), COALESCE(c.is_verified,false)
 		FROM users u
 		LEFT JOIN companies c ON c.user_id=u.id
 		ORDER BY u.created_at DESC LIMIT 200`)

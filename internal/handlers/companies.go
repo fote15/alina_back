@@ -165,26 +165,26 @@ func (h *CompanyHandler) ListSuppliers(w http.ResponseWriter, r *http.Request) {
 	var args []any
 
 	if region != "" {
-		query = `SELECT companies.id, companies.user_id, companies.name, COALESCE(inn,''), COALESCE(kpp,''), COALESCE(ogrn,''),
-		         COALESCE(legal_address,''), COALESCE(actual_address,''), COALESCE(director,''),
-		         COALESCE(description,''), COALESCE(logo_url,''), COALESCE(website,''),
-		         COALESCE(phone,''), COALESCE(email,''), COALESCE(companies.region,''),
-		         is_verified, rating, review_count, deal_count, subscription, companies.created_at::text
+		query = `SELECT companies.id, companies.user_id, companies.name, COALESCE(companies.inn,''), COALESCE(companies.kpp,''), COALESCE(companies.ogrn,''),
+		         COALESCE(companies.legal_address,''), COALESCE(companies.actual_address,''), COALESCE(companies.director,''),
+		         COALESCE(companies.description,''), COALESCE(companies.logo_url,''), COALESCE(companies.website,''),
+		         COALESCE(companies.phone,''), COALESCE(companies.email,''), COALESCE(companies.region,''),
+		         companies.is_verified, companies.rating, companies.review_count, companies.deal_count, companies.subscription, companies.created_at::text
 		         FROM companies
 		         JOIN users ON users.id = companies.user_id
 		         WHERE users.role='supplier' AND (companies.name ILIKE $1) AND companies.region=$2
-		         ORDER BY rating DESC LIMIT 50`
+		         ORDER BY companies.rating DESC LIMIT 50`
 		args = []any{search, region}
 	} else {
-		query = `SELECT companies.id, companies.user_id, companies.name, COALESCE(inn,''), COALESCE(kpp,''), COALESCE(ogrn,''),
-		         COALESCE(legal_address,''), COALESCE(actual_address,''), COALESCE(director,''),
-		         COALESCE(description,''), COALESCE(logo_url,''), COALESCE(website,''),
-		         COALESCE(phone,''), COALESCE(email,''), COALESCE(companies.region,''),
-		         is_verified, rating, review_count, deal_count, subscription, companies.created_at::text
+		query = `SELECT companies.id, companies.user_id, companies.name, COALESCE(companies.inn,''), COALESCE(companies.kpp,''), COALESCE(companies.ogrn,''),
+		         COALESCE(companies.legal_address,''), COALESCE(companies.actual_address,''), COALESCE(companies.director,''),
+		         COALESCE(companies.description,''), COALESCE(companies.logo_url,''), COALESCE(companies.website,''),
+		         COALESCE(companies.phone,''), COALESCE(companies.email,''), COALESCE(companies.region,''),
+		         companies.is_verified, companies.rating, companies.review_count, companies.deal_count, companies.subscription, companies.created_at::text
 		         FROM companies
 		         JOIN users ON users.id = companies.user_id
 		         WHERE users.role='supplier' AND (companies.name ILIKE $1)
-		         ORDER BY rating DESC LIMIT 50`
+		         ORDER BY companies.rating DESC LIMIT 50`
 		args = []any{search}
 	}
 
