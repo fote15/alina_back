@@ -79,7 +79,7 @@ func (h *ReviewHandler) ListReviews(w http.ResponseWriter, r *http.Request) {
 		       rv.reviewee_id, COALESCE(re.name,''),
 		       rv.quality_score, rv.timing_score, rv.communication_score, rv.compliance_score,
 		       (rv.quality_score + rv.timing_score + rv.communication_score + rv.compliance_score)::float/4,
-		       COALESCE(rv.comment,''), rv.created_at
+		       COALESCE(rv.comment,''), rv.created_at::text
 		FROM reviews rv
 		JOIN companies rc ON rc.id=rv.reviewer_id
 		JOIN companies re ON re.id=rv.reviewee_id

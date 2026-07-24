@@ -61,7 +61,7 @@ func (h *RFQHandler) ListRFQs(w http.ResponseWriter, r *http.Request) {
 		         COALESCE(r.delivery_address,''), COALESCE(r.delivery_date::text,''),
 		         COALESCE(r.payment_terms,''), r.status, r.is_published,
 		         COALESCE(r.proposals_deadline::text,''), COALESCE(r.attachments,'{}'),
-		         (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at
+		         (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at::text
 		         FROM rfqs r
 		         JOIN companies c ON c.id=r.buyer_id
 		         LEFT JOIN categories cat ON cat.id=r.category_id
@@ -75,7 +75,7 @@ func (h *RFQHandler) ListRFQs(w http.ResponseWriter, r *http.Request) {
 		         COALESCE(r.delivery_address,''), COALESCE(r.delivery_date::text,''),
 		         COALESCE(r.payment_terms,''), r.status, r.is_published,
 		         COALESCE(r.proposals_deadline::text,''), COALESCE(r.attachments,'{}'),
-		         (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at
+		         (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at::text
 		         FROM rfqs r
 		         JOIN companies c ON c.id=r.buyer_id
 		         LEFT JOIN categories cat ON cat.id=r.category_id
@@ -89,7 +89,7 @@ func (h *RFQHandler) ListRFQs(w http.ResponseWriter, r *http.Request) {
 		         COALESCE(r.delivery_address,''), COALESCE(r.delivery_date::text,''),
 		         COALESCE(r.payment_terms,''), r.status, r.is_published,
 		         COALESCE(r.proposals_deadline::text,''), COALESCE(r.attachments,'{}'),
-		         (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at
+		         (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at::text
 		         FROM rfqs r
 		         JOIN companies c ON c.id=r.buyer_id
 		         LEFT JOIN categories cat ON cat.id=r.category_id
@@ -117,7 +117,7 @@ func (h *RFQHandler) GetRFQ(w http.ResponseWriter, r *http.Request) {
 		       COALESCE(r.delivery_address,''), COALESCE(r.delivery_date::text,''),
 		       COALESCE(r.payment_terms,''), r.status, r.is_published,
 		       COALESCE(r.proposals_deadline::text,''), COALESCE(r.attachments,'{}'),
-		       (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at
+		       (SELECT COUNT(*) FROM proposals p WHERE p.rfq_id=r.id), r.created_at::text
 		FROM rfqs r
 		JOIN companies c ON c.id=r.buyer_id
 		LEFT JOIN categories cat ON cat.id=r.category_id

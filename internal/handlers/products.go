@@ -45,7 +45,7 @@ func (h *ProductHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
 			SELECT id, company_id, COALESCE(category_id::text,''), COALESCE(sku,''), name,
 			       COALESCE(description,''), price, currency, COALESCE(unit,''),
 			       min_order_qty, in_stock, COALESCE(images, '{}'), COALESCE(manufacturer,''),
-			       COALESCE(region,''), is_active, created_at
+			       COALESCE(region,''), is_active, created_at::text
 			FROM products WHERE company_id=$1 AND is_active=true AND name ILIKE $2
 			ORDER BY created_at DESC LIMIT 100`, companyID, search)
 		rows, err = pgrows, e
@@ -63,7 +63,7 @@ func (h *ProductHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
 		SELECT id, company_id, COALESCE(category_id::text,''), COALESCE(sku,''), name,
 		       COALESCE(description,''), price, currency, COALESCE(unit,''),
 		       min_order_qty, in_stock, COALESCE(images, '{}'), COALESCE(manufacturer,''),
-		       COALESCE(region,''), is_active, created_at
+		       COALESCE(region,''), is_active, created_at::text
 		FROM products WHERE is_active=true AND name ILIKE $1
 		ORDER BY created_at DESC LIMIT 100`, search)
 	rows = pgrows
@@ -84,7 +84,7 @@ func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 		SELECT id, company_id, COALESCE(category_id::text,''), COALESCE(sku,''), name,
 		       COALESCE(description,''), price, currency, COALESCE(unit,''),
 		       min_order_qty, in_stock, COALESCE(images, '{}'), COALESCE(manufacturer,''),
-		       COALESCE(region,''), is_active, created_at
+		       COALESCE(region,''), is_active, created_at::text
 		FROM products WHERE id=$1`, id)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "query failed")

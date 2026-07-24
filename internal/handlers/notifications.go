@@ -27,7 +27,7 @@ func (h *NotificationHandler) ListNotifications(w http.ResponseWriter, r *http.R
 	userID := middleware.GetUserID(r)
 	rows, err := h.DB.Query(r.Context(), `
 		SELECT id, type, title, COALESCE(body,''), COALESCE(entity_type,''),
-		       COALESCE(entity_id::text,''), is_read, created_at
+		       COALESCE(entity_id::text,''), is_read, created_at::text
 		FROM notifications WHERE user_id=$1
 		ORDER BY created_at DESC LIMIT 50`, userID)
 	if err != nil {

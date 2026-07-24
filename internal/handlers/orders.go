@@ -51,7 +51,7 @@ func (h *OrderHandler) ListOrders(w http.ResponseWriter, r *http.Request) {
 		query = `SELECT o.id, COALESCE(o.rfq_id::text,''), COALESCE(o.proposal_id::text,''),
 		         o.buyer_id, COALESCE(bc.name,''), o.supplier_id, COALESCE(sc.name,''),
 		         o.total_amount, o.currency, o.status,
-		         COALESCE(o.delivery_address,''), COALESCE(o.notes,''), o.created_at, o.updated_at
+		         COALESCE(o.delivery_address,''), COALESCE(o.notes,''), o.created_at::text, o.updated_at::text
 		         FROM orders o
 		         JOIN companies bc ON bc.id=o.buyer_id
 		         JOIN companies sc ON sc.id=o.supplier_id
@@ -60,7 +60,7 @@ func (h *OrderHandler) ListOrders(w http.ResponseWriter, r *http.Request) {
 		query = `SELECT o.id, COALESCE(o.rfq_id::text,''), COALESCE(o.proposal_id::text,''),
 		         o.buyer_id, COALESCE(bc.name,''), o.supplier_id, COALESCE(sc.name,''),
 		         o.total_amount, o.currency, o.status,
-		         COALESCE(o.delivery_address,''), COALESCE(o.notes,''), o.created_at, o.updated_at
+		         COALESCE(o.delivery_address,''), COALESCE(o.notes,''), o.created_at::text, o.updated_at::text
 		         FROM orders o
 		         JOIN companies bc ON bc.id=o.buyer_id
 		         JOIN companies sc ON sc.id=o.supplier_id
@@ -83,7 +83,7 @@ func (h *OrderHandler) GetOrder(w http.ResponseWriter, r *http.Request) {
 		SELECT o.id, COALESCE(o.rfq_id::text,''), COALESCE(o.proposal_id::text,''),
 		       o.buyer_id, COALESCE(bc.name,''), o.supplier_id, COALESCE(sc.name,''),
 		       o.total_amount, o.currency, o.status,
-		       COALESCE(o.delivery_address,''), COALESCE(o.notes,''), o.created_at, o.updated_at
+		       COALESCE(o.delivery_address,''), COALESCE(o.notes,''), o.created_at::text, o.updated_at::text
 		FROM orders o
 		JOIN companies bc ON bc.id=o.buyer_id
 		JOIN companies sc ON sc.id=o.supplier_id
@@ -101,7 +101,7 @@ func (h *OrderHandler) GetOrder(w http.ResponseWriter, r *http.Request) {
 
 	// Get status history
 	histRows, err := h.DB.Query(r.Context(), `
-		SELECT status, COALESCE(comment,''), changed_by, created_at
+		SELECT status, COALESCE(comment,''), changed_by, created_at::text
 		FROM order_status_history WHERE order_id=$1 ORDER BY created_at`, id)
 	if err == nil {
 		defer histRows.Close()

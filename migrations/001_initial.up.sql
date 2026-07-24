@@ -208,4 +208,4 @@ INSERT INTO categories (id, name, slug) VALUES
 
 -- Seed admin user (password: admin123)
 INSERT INTO users (id, email, password_hash, role) VALUES
-    ('00000000-0000-0000-0000-000000000001', 'admin@alina-trade.ru', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'admin');
+    ('00000000-0000-0000-0000-000000000001', 'admin@alina-trade.ru', '$2a$10$WsJu4zKg6wv47mz5S.VM/O9FcOQeqW4JT3Bhsfcupl/R.Jc1fLLNG', 'admin');

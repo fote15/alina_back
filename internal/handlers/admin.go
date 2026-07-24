@@ -13,7 +13,7 @@ type AdminHandler struct {
 
 func (h *AdminHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.DB.Query(r.Context(), `
-		SELECT u.id, u.email, COALESCE(u.phone,''), u.role, u.created_at,
+		SELECT u.id, u.email, COALESCE(u.phone,''), u.role, u.created_at::text,
 		       COALESCE(c.id::text,''), COALESCE(c.name,''), c.is_verified
 		FROM users u
 		LEFT JOIN companies c ON c.user_id=u.id
@@ -63,7 +63,7 @@ func (h *AdminHandler) BlockUser(w http.ResponseWriter, r *http.Request) {
 func (h *AdminHandler) ListReviewsMod(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.DB.Query(r.Context(), `
 		SELECT rv.id, rv.order_id, COALESCE(rc.name,''), COALESCE(re.name,''),
-		       rv.quality_score, COALESCE(rv.comment,''), rv.is_moderated, rv.created_at
+		       rv.quality_score, COALESCE(rv.comment,''), rv.is_moderated, rv.created_at::text
 		FROM reviews rv
 		JOIN companies rc ON rc.id=rv.reviewer_id
 		JOIN companies re ON re.id=rv.reviewee_id

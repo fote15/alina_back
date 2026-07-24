@@ -57,7 +57,7 @@ func (h *ProposalHandler) ListProposals(w http.ResponseWriter, r *http.Request) 
 			       pr.price, pr.currency,
 			       pr.production_days, pr.delivery_days, pr.delivery_cost,
 			       COALESCE(pr.payment_terms,''), COALESCE(pr.comment,''),
-			       COALESCE(pr.attachments,'{}'), pr.status, pr.created_at
+			       COALESCE(pr.attachments,'{}'), pr.status, pr.created_at::text
 			FROM proposals pr
 			JOIN rfqs r ON r.id=pr.rfq_id
 			JOIN companies c ON c.id=pr.supplier_id
@@ -75,7 +75,7 @@ func (h *ProposalHandler) ListProposals(w http.ResponseWriter, r *http.Request) 
 			       pr.price, pr.currency,
 			       pr.production_days, pr.delivery_days, pr.delivery_cost,
 			       COALESCE(pr.payment_terms,''), COALESCE(pr.comment,''),
-			       COALESCE(pr.attachments,'{}'), pr.status, pr.created_at
+			       COALESCE(pr.attachments,'{}'), pr.status, pr.created_at::text
 			FROM proposals pr
 			JOIN rfqs r ON r.id=pr.rfq_id
 			JOIN companies c ON c.id=pr.supplier_id

@@ -1,0 +1,17 @@
+# Environment
+.env
+.env.local
+
+# Build artifacts
+/alina-trade-back
+/back
+*.exe
+
+# Uploads
+/uploads
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json

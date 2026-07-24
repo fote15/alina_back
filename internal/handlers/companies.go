@@ -45,7 +45,7 @@ func (h *CompanyHandler) GetMyCompany(w http.ResponseWriter, r *http.Request) {
 		       COALESCE(legal_address,''), COALESCE(actual_address,''), COALESCE(director,''),
 		       COALESCE(description,''), COALESCE(logo_url,''), COALESCE(website,''),
 		       COALESCE(phone,''), COALESCE(email,''), COALESCE(region,''),
-		       is_verified, rating, review_count, deal_count, subscription, created_at
+		       is_verified, rating, review_count, deal_count, subscription, created_at::text
 		FROM companies WHERE user_id=$1`, userID,
 	).Scan(&c.ID, &c.UserID, &c.Name, &c.INN, &c.KPP, &c.OGRN,
 		&c.LegalAddress, &c.ActualAddress, &c.Director, &c.Description,
@@ -82,6 +82,10 @@ func (h *CompanyHandler) CreateCompany(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "name is required")
 		return
 	}
+	var inn *string
+	if req.INN != "" {
+		inn = &req.INN
+	}
 	var c companyDTO
 	err := h.DB.QueryRow(r.Context(), `
 		INSERT INTO companies (user_id, name, inn, kpp, ogrn, legal_address, actual_address, director, description, website, phone, email, region)
@@ -90,8 +94,8 @@ func (h *CompanyHandler) CreateCompany(w http.ResponseWriter, r *http.Request) {
 		          COALESCE(legal_address,''), COALESCE(actual_address,''), COALESCE(director,''),
 		          COALESCE(description,''), COALESCE(logo_url,''), COALESCE(website,''),
 		          COALESCE(phone,''), COALESCE(email,''), COALESCE(region,''),
-		          is_verified, rating, review_count, deal_count, subscription, created_at`,
-		userID, req.Name, req.INN, req.KPP, req.OGRN,
+		          is_verified, rating, review_count, deal_count, subscription, created_at::text`,
+		userID, req.Name, inn, req.KPP, req.OGRN,
 		req.LegalAddress, req.ActualAddress, req.Director, req.Description,
 		req.Website, req.Phone, req.Email, req.Region,
 	).Scan(&c.ID, &c.UserID, &c.Name, &c.INN, &c.KPP, &c.OGRN,
@@ -139,7 +143,7 @@ func (h *CompanyHandler) GetCompany(w http.ResponseWriter, r *http.Request) {
 		       COALESCE(legal_address,''), COALESCE(actual_address,''), COALESCE(director,''),
 		       COALESCE(description,''), COALESCE(logo_url,''), COALESCE(website,''),
 		       COALESCE(phone,''), COALESCE(email,''), COALESCE(region,''),
-		       is_verified, rating, review_count, deal_count, subscription, created_at
+		       is_verified, rating, review_count, deal_count, subscription, created_at::text
 		FROM companies WHERE id=$1`, id,
 	).Scan(&c.ID, &c.UserID, &c.Name, &c.INN, &c.KPP, &c.OGRN,
 		&c.LegalAddress, &c.ActualAddress, &c.Director, &c.Description,
@@ -161,22 +165,22 @@ func (h *CompanyHandler) ListSuppliers(w http.ResponseWriter, r *http.Request) {
 	var args []any
 
 	if region != "" {
-		query = `SELECT id, user_id, name, COALESCE(inn,''), COALESCE(kpp,''), COALESCE(ogrn,''),
+		query = `SELECT companies.id, companies.user_id, companies.name, COALESCE(inn,''), COALESCE(kpp,''), COALESCE(ogrn,''),
 		         COALESCE(legal_address,''), COALESCE(actual_address,''), COALESCE(director,''),
 		         COALESCE(description,''), COALESCE(logo_url,''), COALESCE(website,''),
-		         COALESCE(phone,''), COALESCE(email,''), COALESCE(region,''),
-		         is_verified, rating, review_count, deal_count, subscription, created_at
+		         COALESCE(phone,''), COALESCE(email,''), COALESCE(companies.region,''),
+		         is_verified, rating, review_count, deal_count, subscription, companies.created_at::text
 		         FROM companies
 		         JOIN users ON users.id = companies.user_id
 		         WHERE users.role='supplier' AND (companies.name ILIKE $1) AND companies.region=$2
 		         ORDER BY rating DESC LIMIT 50`
 		args = []any{search, region}
 	} else {
-		query = `SELECT id, user_id, name, COALESCE(inn,''), COALESCE(kpp,''), COALESCE(ogrn,''),
+		query = `SELECT companies.id, companies.user_id, companies.name, COALESCE(inn,''), COALESCE(kpp,''), COALESCE(ogrn,''),
 		         COALESCE(legal_address,''), COALESCE(actual_address,''), COALESCE(director,''),
 		         COALESCE(description,''), COALESCE(logo_url,''), COALESCE(website,''),
-		         COALESCE(phone,''), COALESCE(email,''), COALESCE(region,''),
-		         is_verified, rating, review_count, deal_count, subscription, created_at
+		         COALESCE(phone,''), COALESCE(email,''), COALESCE(companies.region,''),
+		         is_verified, rating, review_count, deal_count, subscription, companies.created_at::text
 		         FROM companies
 		         JOIN users ON users.id = companies.user_id
 		         WHERE users.role='supplier' AND (companies.name ILIKE $1)

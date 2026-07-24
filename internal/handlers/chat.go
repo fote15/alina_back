@@ -35,7 +35,7 @@ func (h *ChatHandler) GetMessages(w http.ResponseWriter, r *http.Request) {
 	rows, err := h.DB.Query(r.Context(), `
 		SELECT m.id, m.order_id, m.sender_id, COALESCE(u.email,''),
 		       COALESCE(m.content,''), COALESCE(m.file_url,''), COALESCE(m.file_name,''),
-		       m.is_read, m.created_at
+		       m.is_read, m.created_at::text
 		FROM messages m
 		JOIN users u ON u.id=m.sender_id
 		WHERE m.order_id=$1
