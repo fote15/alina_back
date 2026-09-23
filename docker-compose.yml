@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: alina-trade-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: alina
+      POSTGRES_PASSWORD: alina_trade_password_secure_2026
+      POSTGRES_DB: alina_trade
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alina -d alina_trade"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: alina-trade-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: postgresql://alina:alina_trade_password_secure_2026@postgres:5432/alina_trade?sslmode=disable
+      JWT_SECRET: alina_trade_jwt_super_secret_key_production_2026
+      PORT: 8080
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads_data:/app/uploads
+    expose:
+      - "8080"
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: alina-trade-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/www/certbot:/var/www/certbot:ro
+      - ./front/ssl:/etc/nginx/ssl:ro
+
+volumes:
+  postgres_data:
+  uploads_data:

@@ -1,0 +1,11 @@
+{
+  "defaultMode": "acceptEdits",
+  "permissions": {
+    "ask": [],
+    "deny": [],
+    "allow": [
+      "Bash(*)",
+      "Edit(*)"
+    ]
+  }
+}
